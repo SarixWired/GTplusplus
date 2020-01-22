@@ -2,6 +2,7 @@ package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi.production;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.TAE;
@@ -16,6 +17,7 @@ import gregtech.api.util.Recipe_GT;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.recipe.common.CI;
+import gtPlusPlus.core.util.minecraft.ItemUtils;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import net.minecraft.item.Item;
@@ -29,7 +31,7 @@ extends GregtechMeta_MultiBlockBase {
 	private int mHeatingCapacity = 0;
 	private int mMode = 0;
 	private boolean isUsingControllerCircuit = false;
-	private static final Item circuit = CI.getNumberedCircuit(0).getItem();
+	private static Item circuit;
 
 	public GregtechMetaTileEntity_AlloyBlastSmelter(final int aID, final String aName, final String aNameRegional) {
 		super(aID, aName, aNameRegional);
@@ -46,7 +48,7 @@ extends GregtechMeta_MultiBlockBase {
 
 	@Override
 	public String getMachineType() {
-		return "Alloy Smelter";
+		return "Fluid Alloy Cooker";
 	}
 
 	@Override
@@ -104,6 +106,9 @@ extends GregtechMeta_MultiBlockBase {
 	public boolean isCorrectMachinePart(final ItemStack aStack) {
 		if (this.getBaseMetaTileEntity().isServerSide()) {
 			//Get Controller Circuit
+			if (circuit == null) {
+				circuit = CI.getNumberedCircuit(0).getItem();
+			}
 			if (aStack != null && aStack.getItem() == circuit) {
 				this.mMode = aStack.getItemDamage();	
 				return this.isUsingControllerCircuit = true;
@@ -197,6 +202,14 @@ extends GregtechMeta_MultiBlockBase {
 					}
 					this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
 					this.mOutputFluids = new FluidStack[]{tRecipe.getFluidOutput(0)};
+					List<ItemStack> tOutPutItems = new ArrayList<ItemStack>();
+					for (ItemStack tOut : tRecipe.mOutputs) {
+						if (ItemUtils.checkForInvalidItems(tOut)) {
+							tOutPutItems.add(tOut);
+						}	
+					}
+					if (tOutPutItems.size() > 0)
+					this.mOutputItems = tOutPutItems.toArray(new ItemStack[tOutPutItems.size()]);
 					this.updateSlots();
 					return true;
 				}

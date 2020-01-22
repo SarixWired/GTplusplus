@@ -39,6 +39,13 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Emitter_ULV,
 	Sensor_ULV,
 
+	// Mixed Components
+	TransmissionComponent_ULV, TransmissionComponent_LV, 
+	TransmissionComponent_MV, TransmissionComponent_HV, 
+	TransmissionComponent_EV, TransmissionComponent_IV,
+	TransmissionComponent_LuV, TransmissionComponent_ZPM, 
+	TransmissionComponent_UV, TransmissionComponent_MAX, 
+	
 	//Recipe Circuit
 	Circuit_BioRecipeSelector,
 	
@@ -132,6 +139,14 @@ public enum GregtechItemList implements GregtechItemContainer {
 	 * MultiBlocks
 	 */
 
+	
+	// Tier GT++ Casings
+	GTPP_Casing_ULV, GTPP_Casing_LV, 
+	GTPP_Casing_MV, GTPP_Casing_HV, 
+	GTPP_Casing_EV, GTPP_Casing_IV, 
+	GTPP_Casing_LuV, GTPP_Casing_ZPM, 
+	GTPP_Casing_UV, GTPP_Casing_MAX,
+	
 	//IronBlastFurnace Machine_Bronze_BlastFurnace
 	Machine_Iron_BlastFurnace, 
 	Casing_IronPlatedBricks,
@@ -140,6 +155,9 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Industrial_Centrifuge, 
 	Casing_Centrifuge1,
 
+	// Large Alloy Smelter
+	Industrial_AlloySmelter,
+	
 	//Coke Oven
 	Industrial_CokeOven,
 	Casing_CokeOven,
@@ -288,6 +306,7 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Machine_Adv_BlastFurnace, 
 	Casing_Adv_BlastFurnace,
 	Machine_Adv_ImplosionCompressor, 
+	Machine_Adv_DistillationTower,
 
 
 	//Advanced Vacuum Freezer
@@ -508,6 +527,8 @@ public enum GregtechItemList implements GregtechItemContainer {
 
 	//512v Creative Buffer
 	Energy_Buffer_CREATIVE,
+	//Variable voltage RF convertor
+	Energy_Buffer_RF_Convertor,
 	//Energy Buffers
 	Energy_Buffer_1by1_ULV, Energy_Buffer_1by1_LV,
 	Energy_Buffer_1by1_MV, Energy_Buffer_1by1_HV,
@@ -616,7 +637,9 @@ public enum GregtechItemList implements GregtechItemContainer {
 	FakeMachineCasingPlate_MV, FakeMachineCasingPlate_HV,
 	FakeMachineCasingPlate_EV, FakeMachineCasingPlate_IV,
 	FakeMachineCasingPlate_LuV, FakeMachineCasingPlate_ZPM,
-	FakeMachineCasingPlate_UV, FakeMachineCasingPlate_MAX, 
+	FakeMachineCasingPlate_UV, FakeMachineCasingPlate_MAX,
+	
+	
 	
 
 	//----------------------------------------------------------------------------

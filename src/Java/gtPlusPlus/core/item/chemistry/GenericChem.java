@@ -87,7 +87,7 @@ public class GenericChem extends ItemPackage {
 
 	// Phenol Byproducts
 	public Item PhenolicResins; //https://en.wikipedia.org/wiki/Phenol_formaldehyde_resin
-	public ItemGenericChemBase mGenericChemItem1;
+	public static ItemGenericChemBase mGenericChemItem1;
 
 
 
@@ -106,12 +106,13 @@ public class GenericChem extends ItemPackage {
 
 	private ItemStack mCatalystCarrier;
 	
-	public ItemStack mRedCatalyst;
-	public ItemStack mYellowCatalyst;
-	public ItemStack mBlueCatalyst;
-	public ItemStack mOrangeCatalyst;
-	public ItemStack mPurpleCatalyst;
-	public ItemStack mBrownCatalyst;
+	public static ItemStack mRedCatalyst;
+	public static ItemStack mYellowCatalyst;
+	public static ItemStack mBlueCatalyst;
+	public static ItemStack mOrangeCatalyst;
+	public static ItemStack mPurpleCatalyst;
+	public static ItemStack mBrownCatalyst;
+	public static ItemStack mPinkCatalyst;
 	
 	
 	public void registerItemStacks() {
@@ -124,6 +125,7 @@ public class GenericChem extends ItemPackage {
 		mOrangeCatalyst = ItemUtils.simpleMetaStack(mGenericChemItem1, 3, 1);
 		mPurpleCatalyst = ItemUtils.simpleMetaStack(mGenericChemItem1, 4, 1);
 		mBrownCatalyst = ItemUtils.simpleMetaStack(mGenericChemItem1, 5, 1);
+		mPinkCatalyst = ItemUtils.simpleMetaStack(mGenericChemItem1, 6, 1);
 		
 	}
 	
@@ -135,6 +137,7 @@ public class GenericChem extends ItemPackage {
 		ItemUtils.addItemToOreDictionary(mOrangeCatalyst, "catalystVanadiumPalladium");
 		ItemUtils.addItemToOreDictionary(mPurpleCatalyst, "catalystIridiumRuthenium");
 		ItemUtils.addItemToOreDictionary(mBrownCatalyst, "catalystNickelAluminium");
+		ItemUtils.addItemToOreDictionary(mPinkCatalyst, "catalystPlatinumRhodium");
 		
 	}
 
@@ -206,6 +209,7 @@ public class GenericChem extends ItemPackage {
 		recipeCatalystOrange();
 		recipeCatalystPurple();
 		recipeCatalystBrown();
+		recipeCatalystPink();
 		
 		recipeNitroBenzene();
 		recipeAniline();
@@ -224,17 +228,16 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeCyclohexane() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierTwoChip(),		
-						ItemUtils.getSimpleStack(mBrownCatalyst, 1)
+						ItemUtils.getSimpleStack(mBrownCatalyst, 0)
 				}, 
 				new FluidStack[] {
 						FluidUtils.getFluidStack(Benzene, 2000),
 						FluidUtils.getFluidStack("hydrogen", 10000)
 				}, 
 				new ItemStack[] {
-						ItemUtils.getSimpleStack(mCatalystCarrier, 1)
 						
 				}, 
 				new FluidStack[] {
@@ -248,17 +251,16 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeCyclohexanone() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierTwoChip(),		
-						ItemUtils.getSimpleStack(mBlueCatalyst, 1)
+						ItemUtils.getSimpleStack(mBlueCatalyst, 0)
 				}, 
 				new FluidStack[] {
 						FluidUtils.getFluidStack(Cyclohexane, 2000),
 						FluidUtils.getFluidStack("air", 10000)
 				}, 
 				new ItemStack[] {
-						ItemUtils.getSimpleStack(mCatalystCarrier, 1)
 						
 				}, 
 				new FluidStack[] {
@@ -268,7 +270,7 @@ public class GenericChem extends ItemPackage {
 				120, 
 				2);
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierTwoChip(),
 				}, 
@@ -295,7 +297,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierOneChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().IRON.getDust(2),
 				ELEMENT.getInstance().COPPER.getDust(2),
 		}, 
@@ -310,7 +312,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierThreeChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().TUNGSTEN.getDust(4),
 				ELEMENT.getInstance().NICKEL.getDust(4),
 		}, 
@@ -325,7 +327,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierTwoChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().COBALT.getDust(3),
 				ELEMENT.getInstance().TITANIUM.getDust(3),
 		}, 
@@ -340,7 +342,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierTwoChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().VANADIUM.getDust(5),
 				ELEMENT.getInstance().PALLADIUM.getDust(5),
 		}, 
@@ -355,7 +357,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierFourChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().IRIDIUM.getDust(6),
 				ELEMENT.getInstance().RUTHENIUM.getDust(6),
 		}, 
@@ -370,7 +372,7 @@ public class GenericChem extends ItemPackage {
 		// Assembly Recipe
 		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 				getTierOneChip(),
-				ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier, 10),
+				CI.getEmptyCatalyst(10),
 				ELEMENT.getInstance().NICKEL.getDust(4),
 				ELEMENT.getInstance().ALUMINIUM.getDust(4),
 		}, 
@@ -381,10 +383,25 @@ public class GenericChem extends ItemPackage {
 		
 	}
 
+	private void recipeCatalystPink() {
+		// Assembly Recipe
+		CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
+				getTierThreeChip(),
+				CI.getEmptyCatalyst(10),
+				ELEMENT.getInstance().PLATINUM.getDust(4),
+				ELEMENT.getInstance().RHODIUM.getDust(4),
+		}, 
+				GT_Values.NF, 
+				ItemUtils.getSimpleStack(mPinkCatalyst, 10),
+				30 * 20, 
+				2000);
+		
+	}
+
 	private void recipeCadaverineAndPutrescine() {
 		
 		// Basic Recipe
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierOneChip(),		
 						ItemUtils.getSimpleStack(Items.rotten_flesh, 64)
@@ -404,7 +421,7 @@ public class GenericChem extends ItemPackage {
 				1);
 
 		// Advanced Recipe
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierTwoChip(),		
 						ItemUtils.getSimpleStack(Items.rotten_flesh, 128),		
@@ -428,17 +445,16 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeAniline() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierThreeChip(),		
-						ItemUtils.getSimpleStack(mBlueCatalyst, 1)
+						ItemUtils.getSimpleStack(mBlueCatalyst, 0)
 				}, 
 				new FluidStack[] {
 						FluidUtils.getFluidStack(NitroBenzene, 2000),
 						FluidUtils.getFluidStack("hydrogen", 10000)
 				}, 
 				new ItemStack[] {
-						ItemUtils.getSimpleStack(mCatalystCarrier, 1)
 						
 				}, 
 				new FluidStack[] {
@@ -452,7 +468,7 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeNitroBenzene() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						getTierThreeChip(),						
 				}, 
@@ -477,7 +493,7 @@ public class GenericChem extends ItemPackage {
 
 	private void recipe2Ethylanthraquinone() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						CI.getNumberedCircuit(4),		
 						ItemUtils.getItemStackOfAmountFromOreDict("dustPhthalicAnhydride", 4),				
@@ -507,10 +523,10 @@ public class GenericChem extends ItemPackage {
 
 	private void recipe2Ethylanthrahydroquinone() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						CI.getNumberedCircuit(4),		
-						ItemUtils.getSimpleStack(mOrangeCatalyst, 1),			
+						ItemUtils.getSimpleStack(mOrangeCatalyst, 0),			
 				}, 
 				new FluidStack[] {
 						FluidUtils.getFluidStack(Ethylanthraquinone2, 4000),
@@ -556,7 +572,7 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeLithiumHydroperoxide() {
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						CI.getNumberedCircuit(4),		
 						ItemUtils.getItemStackOfAmountFromOreDict("dustLithiumHydroxide", 7),
@@ -590,7 +606,7 @@ public class GenericChem extends ItemPackage {
 
 	private void recipeHydrogenPeroxide() {	
 		
-		CORE.RA.addFluidReactorRecipe(
+		CORE.RA.addChemicalPlantRecipe(
 				new ItemStack[] {
 						CI.getNumberedCircuit(4),
 				}, 

@@ -29,6 +29,7 @@ import gtPlusPlus.core.block.machine.Machine_WorkbenchAdvanced;
 import gtPlusPlus.core.block.machine.bedrock.Mining_Head_Fake;
 import gtPlusPlus.core.block.machine.bedrock.Mining_Pipe_Fake;
 import gtPlusPlus.core.fluids.FluidRegistryHandler;
+import gtPlusPlus.xmod.gregtech.common.blocks.GregtechMetaTieredCasingBlocks1;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fluids.Fluid;
@@ -54,7 +55,8 @@ public final class ModBlocks {
 	public static Block blockCasingsMisc;
 	public static Block blockCasings2Misc;
 	public static Block blockCasings3Misc;
-	public static Block blockCasings4Misc;
+	public static Block blockCasings4Misc;	
+	public static Block blockCasingsTieredGTPP;
 	
 	public static Block blockMetaTileEntity;
 	public static Block blockHeliumGenerator;

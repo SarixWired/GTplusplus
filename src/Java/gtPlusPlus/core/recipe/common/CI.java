@@ -7,6 +7,7 @@ import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.item.chemistry.AgriculturalChem;
+import gtPlusPlus.core.item.chemistry.GenericChem;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.ALLOY;
@@ -564,7 +565,7 @@ public class CI {
 	private static final Material[] aMaterial_Secondary = new Material[] {
 			ALLOY.STEEL,
 			ALLOY.SILICON_CARBIDE,
-			ALLOY.TUNGSTEN_CARBIDE,				
+			ALLOY.BABBIT_ALLOY,				
 			ALLOY.INCONEL_690,				
 			ALLOY.STELLITE,
 			ALLOY.ARCANITE,				
@@ -579,7 +580,7 @@ public class CI {
 	private static final Material[] aMaterial_Tertiary = new Material[] {
 			ELEMENT.getInstance().LEAD,
 			ELEMENT.getInstance().ALUMINIUM,
-			ALLOY.STAINLESS_STEEL,
+			ELEMENT.STANDALONE.BLACK_METAL,
 			ELEMENT.getInstance().TUNGSTEN,
 			ALLOY.HASTELLOY_N,
 			ALLOY.ENERGYCRYSTAL,				
@@ -592,7 +593,7 @@ public class CI {
 	};	
 	
 	private static final Materials[] aMaterial_Cables = new Materials[] {
-			(CORE.ConfigSwitches.enableCustom_Cables && LoadedMods.EnderIO) ? Materials.RedstoneAlloy :  CORE.GTNH ? Materials.Lead : Materials.Tin,
+			!CORE.GTNH ? Materials.Lead : Materials.Tin,
 			Materials.Cobalt,
 			Materials.AnnealedCopper,
 			Materials.Gold,
@@ -1242,6 +1243,118 @@ public class CI {
 
 	public static ItemStack getNumberedBioCircuit(int i) {
 		return ItemUtils.simpleMetaStack(AgriculturalChem.mBioCircuit, i, 0);
+	}
+
+	public static ItemStack getTieredGTPPMachineCasing(int aTier, int aAmount) {
+		GregtechItemList[] aHulls = new GregtechItemList[] {
+				GregtechItemList.GTPP_Casing_ULV,
+				GregtechItemList.GTPP_Casing_LV,
+				GregtechItemList.GTPP_Casing_MV,
+				GregtechItemList.GTPP_Casing_HV,
+				GregtechItemList.GTPP_Casing_EV,
+				GregtechItemList.GTPP_Casing_IV,
+				GregtechItemList.GTPP_Casing_LuV,
+				GregtechItemList.GTPP_Casing_ZPM,
+				GregtechItemList.GTPP_Casing_UV,
+				GregtechItemList.GTPP_Casing_MAX
+		};
+		return aHulls[aTier].get(aAmount);
+	}
+
+	public static ItemStack getTieredComponentOfMaterial(Materials aMaterial, OrePrefixes aPrefix, int aAmount) {
+		return ItemUtils.getOrePrefixStack(aPrefix, aMaterial, aAmount);
+	}
+
+	public static ItemStack getTransmissionComponent(int aTier, int aAmount) {
+		GregtechItemList[] aTransParts = new GregtechItemList[] {
+				GregtechItemList.TransmissionComponent_ULV,
+				GregtechItemList.TransmissionComponent_LV,
+				GregtechItemList.TransmissionComponent_MV,
+				GregtechItemList.TransmissionComponent_HV,
+				GregtechItemList.TransmissionComponent_EV,
+				GregtechItemList.TransmissionComponent_IV,
+				GregtechItemList.TransmissionComponent_LuV,
+				GregtechItemList.TransmissionComponent_ZPM,
+				GregtechItemList.TransmissionComponent_UV,
+				GregtechItemList.TransmissionComponent_MAX,
+		};
+		return aTransParts[aTier].get(aAmount);
+	}
+
+	public static ItemStack getEmptyCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(AgriculturalChem.mAgrichemItem1, 13, aAmount);
+	}
+
+	/**
+	 * Aluminium + Silver Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getGreenCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(AgriculturalChem.mAgrichemItem1, 14, aAmount);
+	}
+	
+	/**
+	 * Iron + Copper Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getRedCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 0, aAmount);
+	}
+	
+	/**
+	 * Tungsten + Nickel Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getYellowCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 1, aAmount);
+	}
+	
+	/**
+	 * Cobalt + Titanium Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getBlueCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 2, aAmount);
+	}
+	
+	/**
+	 * Vanadium + Palladium Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getOrangeCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 3, aAmount);
+	}
+	
+	/**
+	 * Iridium + Ruthenium Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getPurpleCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 4, aAmount);
+	}
+	
+	/**
+	 * Aluminium + Nickel Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getBrownCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 5, aAmount);
+	}
+	
+	/**
+	 * Platinum + Rhodium Catalyst
+	 * @param aAmount - Stacksize
+	 * @return - A Catalyst stack of given size
+	 */
+	public static ItemStack getPinkCatalyst(int aAmount) {
+		return ItemUtils.simpleMetaStack(GenericChem.mGenericChemItem1, 6, aAmount);
 	}
 
 }

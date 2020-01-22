@@ -15,6 +15,7 @@ public class AsmConfig {
 	public static boolean enableTiConFluidLighting;
 	public static boolean enableGtTooltipFix;
 	public static boolean enableGtNbtFix;
+	public static boolean enableGtCharcoalPitFix;
 	public static boolean enableChunkDebugging;
 	public static boolean enableCofhPatch;
 	public static boolean enableGcFuelChanges;
@@ -22,6 +23,7 @@ public class AsmConfig {
 	public static boolean enableRcItemDupeFix;
 	public static boolean enableTcAspectSafety;
 	public static boolean enabledLwjglKeybindingFix;
+	public static boolean enabledFixEntitySetHealth;
 	
 	public static boolean disableAllLogging;
 
@@ -49,6 +51,12 @@ public class AsmConfig {
 			prop.comment = "Disables ALL logging from GT++.";
 			prop.setLanguageKey("gtpp.disableAllLogging").setRequiresMcRestart(false);
 			disableAllLogging = prop.getBoolean(false);
+			propOrderDebug.add(prop.getName());
+			
+			prop = config.get("debug", "enabledFixEntitySetHealth", false);
+			prop.comment = "Enable/Disable entity setHealth() fix.";
+			prop.setLanguageKey("gtpp.enabledFixEntitySetHealth").setRequiresMcRestart(true);
+			enabledFixEntitySetHealth = prop.getBoolean(false);
 			propOrderDebug.add(prop.getName());
 			
 			prop = config.get("debug", "enableChunkDebugging", false);
@@ -89,6 +97,14 @@ public class AsmConfig {
 			prop.comment = "Enable/Disable Custom GT Tooltips";
 			prop.setLanguageKey("gtpp.enableGtTooltipFix").setRequiresMcRestart(true);
 			enableGtTooltipFix = prop.getBoolean(true);
+			propOrder.add(prop.getName());
+			
+				
+			
+			prop = config.get("general", "enableGtCharcoalPitFix", true);
+			prop.comment = "Makes the Charcoal Pile Igniter work better.";
+			prop.setLanguageKey("gtpp.enableGtCharcoalPitFix").setRequiresMcRestart(true);
+			enableGtCharcoalPitFix = prop.getBoolean(true);
 			propOrder.add(prop.getName());
 			
 			prop = config.get("general", "enableGcFuelChanges", true);
@@ -137,6 +153,7 @@ public class AsmConfig {
 			FMLLog.log(Level.INFO, "[GT++ ASM] Gc Fuel Changes Patch - Enabled: "+enableGcFuelChanges, new Object[0]);
 			FMLLog.log(Level.INFO, "[GT++ ASM] Railcraft Fluid Flow Patch - Enabled: "+enableRcFlowFix, new Object[0]);
 			FMLLog.log(Level.INFO, "[GT++ ASM] Thaumcraft Aspect Safety Patch - Enabled: "+enableTcAspectSafety, new Object[0]);
+			FMLLog.log(Level.INFO, "[GT++ ASM] Fix bad usage of EntityLivingBase.setHealth Patch - Enabled: "+enabledFixEntitySetHealth, new Object[0]);
 			
 		} catch (Exception var3) {
 			FMLLog.log(Level.ERROR, var3, "GT++ ASM had a problem loading it's config", new Object[0]);

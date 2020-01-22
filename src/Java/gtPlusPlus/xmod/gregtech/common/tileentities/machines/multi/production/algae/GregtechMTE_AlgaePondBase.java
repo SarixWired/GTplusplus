@@ -61,6 +61,7 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 		return new String[] {
 				"Grows Algae!",
 				"Controller Block for the Algae Farm",
+				"Provide compost to boost production by one tier",
 				"Size: 9x3x9 [WxHxL] (open)",
 				"X           X",
 				"X           X", 
@@ -231,7 +232,7 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 	}
 
 	public boolean checkForWater() {		
-		
+
 		// Get Facing direction
 		IGregTechTileEntity aBaseMetaTileEntity = this.getBaseMetaTileEntity();
 		int mDirectionX = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
@@ -339,7 +340,7 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 		if (aBaseMetaTileEntity.isClientSide()) {
 			this.mLevel = getCasingTierOnClientSide();
 		}
-		
+
 	}
 
 	@Override
@@ -378,8 +379,14 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 			return false;
 		}
 
-		if (!this.canBufferOutputs(tRecipe, aMaxParallelRecipes, false)) {
+		aMaxParallelRecipes = this.canBufferOutputs(tRecipe, aMaxParallelRecipes);
+		if (aMaxParallelRecipes == 0) {
 			return false;
+		}
+		if (tRecipe.mInputs.length > 0) {
+			for (ItemStack aInputToConsume : tRecipe.mInputs) {
+				this.depleteInput(aInputToConsume);			
+			}
 		}
 
 
@@ -474,7 +481,7 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 		}
 		return false;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	private final int getCasingTierOnClientSide() {
 		if (this == null || this.getBaseMetaTileEntity().getWorld() == null) {
@@ -496,7 +503,7 @@ public class GregtechMTE_AlgaePondBase extends GregtechMeta_MultiBlockBase {
 			return 0;
 		}
 	}
-	
+
 
 
 }

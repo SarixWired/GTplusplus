@@ -17,6 +17,7 @@ import gregtech.api.util.ThermalFuel;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.ModItems;
+import gtPlusPlus.core.item.chemistry.AgriculturalChem;
 import gtPlusPlus.core.item.chemistry.GenericChem;
 import gtPlusPlus.core.item.chemistry.IonParticles;
 import gtPlusPlus.core.item.chemistry.RocketFuels;
@@ -39,6 +40,7 @@ import gtPlusPlus.core.util.minecraft.ItemUtils;
 import gtPlusPlus.core.util.minecraft.MaterialUtils;
 import gtPlusPlus.core.util.reflect.AddGregtechRecipe;
 import gtPlusPlus.everglades.dimension.Dimension_Everglades;
+import gtPlusPlus.plugin.agrichem.BioRecipes;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -91,6 +93,7 @@ public class RECIPES_GREGTECH {
 		latheRecipes();
 		vacuumFreezerRecipes();
 		fluidheaterRecipes();
+		chemplantRecipes();
 
 
 		/**
@@ -105,6 +108,30 @@ public class RECIPES_GREGTECH {
 
 
 		addFuels();
+	}
+
+	private static void chemplantRecipes() {
+
+		// Advanced method for Nitric Acid Production
+		/*		CORE.RA.addChemicalPlantRecipe(
+						new ItemStack[] {
+								CI.getNumberedBioCircuit(17),
+								CI.getPinkCatalyst(0),
+						},
+						new FluidStack[] {
+								FluidUtils.getLava(10000),
+								FluidUtils.getDistilledWater(5000)
+						},
+						new ItemStack[] {
+								
+						},
+						new FluidStack[] {
+								FluidUtils.getFluidStack("nitricacid", 2000),					
+						},
+						10 * 20,
+						480,
+						3);*/
+		
 	}
 
 	private static void fluidheaterRecipes() {
@@ -511,6 +538,30 @@ public class RECIPES_GREGTECH {
 
 	private static void laserEngraverRecipes() {		
 
+		// Laser Sensors and Emitters together
+		GregtechItemList[] aTransParts = new GregtechItemList[] {
+				GregtechItemList.TransmissionComponent_ULV,
+				GregtechItemList.TransmissionComponent_LV,
+				GregtechItemList.TransmissionComponent_MV,
+				GregtechItemList.TransmissionComponent_HV,
+				GregtechItemList.TransmissionComponent_EV,
+				GregtechItemList.TransmissionComponent_IV,
+				GregtechItemList.TransmissionComponent_LuV,
+				GregtechItemList.TransmissionComponent_ZPM,
+				GregtechItemList.TransmissionComponent_UV,
+				GregtechItemList.TransmissionComponent_MAX,
+		};
+		for (int i=0;i<10;i++) {
+			GT_Values.RA.addLaserEngraverRecipe(
+					CI.getEmitter(i, 2),
+					CI.getSensor(i, 2),
+					aTransParts[i].get(1),
+					20 * 5,
+					MaterialUtils.getVoltageForTier(i));
+		}
+
+
+
 		GT_Values.RA.addLaserEngraverRecipe(
 				GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Tungsten, 6L),
 				GregtechItemList.Laser_Lens_Special.get(0),
@@ -645,7 +696,19 @@ public class RECIPES_GREGTECH {
 				},
 				new int[] {10000}, //Output Chance 
 				20 * 120,
-				122880);
+				30720);
+
+		//NITINOL_60
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] {
+						ELEMENT.getInstance().TITANIUM.getDust(3),
+						ELEMENT.getInstance().NICKEL.getDust(2)
+				},
+				ALLOY.NITINOL_60.getFluid(5 * 144),
+				0,
+				20 * 75,
+				7680);
+
 
 
 
@@ -835,13 +898,13 @@ public class RECIPES_GREGTECH {
 
 		//Gelid Cryotheum
 		CORE.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustCryotheum", 1), FluidUtils.getFluidStack("cryotheum", 250), 200, 240);
-		
+
 		//Ender Fluid
 		CORE.RA.addFluidExtractionRecipe(ItemUtils.getSimpleStack(Items.ender_pearl), FluidUtils.getFluidStack("ender", 250), 100, 30);		
-		
+
 		//Blazing Pyrotheum
 		CORE.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustPyrotheum", 1), FluidUtils.getFluidStack("pyrotheum", 250), 200, 240);
-		
+
 
 	}
 
@@ -1556,10 +1619,10 @@ public class RECIPES_GREGTECH {
 				GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Invar, 8L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Invar, 4L), GregtechItemList.Fluid_Cell_144L.get(1L, new Object[0]), 75, 32);
 			}
 		}
-		
+
 
 		if (LoadedMods.Baubles) {
-			
+
 
 
 			// Turbine Housing Research Page
@@ -1588,8 +1651,8 @@ public class RECIPES_GREGTECH {
 					ItemDummyResearch.getResearchStack(ASSEMBLY_LINE_RESEARCH.RESEARCH_9_CLOAKING, 1),
 					20 * 60 * 10,
 					(int) GT_Values.V[7]);
-			
-			
+
+
 			// Supreme Pizza Gloves
 			CORE.RA.addSixSlotAssemblingRecipe(new ItemStack[] {
 					ItemUtils.getGregtechCircuit(19),
@@ -1752,27 +1815,7 @@ public class RECIPES_GREGTECH {
 
 	}
 
-	private static void centrifugeRecipes() {
-
-		//Try use all woods found, fix/add methane extraction.
-		ArrayList<ItemStack> aLogData = OreDictionary.getOres("logWood");
-		ArrayList<ItemStack> aRubberLogs = OreDictionary.getOres("logRubber");
-		if (!aLogData.isEmpty() && !aRubberLogs.isEmpty()) {
-			Logger.INFO("Fixing Methane output of centrifuged logs.");			
-			//First Check to see if it's a rubber log
-			for (ItemStack stack : aLogData) {				
-				if (aRubberLogs.contains(stack)) {
-					if (GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, stack), null, null, Materials.Methane.getGas(60L), ItemList.IC2_Resin.get(1L, new Object[0]), GT_ModHandler.getIC2Item("plantBall", 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Carbon, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 1L), null, null, new int[] { 5000, 3750, 2500, 2500 }, 200, 20)) {
-						Logger.INFO("Added rubber plant based methane extraction for "+ItemUtils.getItemName(stack));	
-					}
-				}
-				else {
-					if (GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, stack), null, null, Materials.Methane.getGas(60L), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, null, 200, 20)) {
-						Logger.INFO("Added methane extraction for "+ItemUtils.getItemName(stack));	
-					}
-				}
-			}			
-		}		
+	private static void centrifugeRecipes() {				
 
 		GT_Values.RA.addCentrifugeRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustThorium", 8), GT_Values.NI,
 				GT_Values.NF, GT_Values.NF, ELEMENT.getInstance().THORIUM232.getDust(2),

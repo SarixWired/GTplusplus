@@ -25,11 +25,14 @@ import gtPlusPlus.core.item.base.dusts.BaseItemDustUnique;
 import gtPlusPlus.core.item.base.dusts.decimal.BaseItemCentidust;
 import gtPlusPlus.core.item.base.dusts.decimal.BaseItemDecidust;
 import gtPlusPlus.core.item.base.plates.BaseItemPlate_OLD;
+import gtPlusPlus.core.item.chemistry.AgriculturalChem;
+import gtPlusPlus.core.item.chemistry.GenericChem;
 import gtPlusPlus.core.item.tool.staballoy.MultiPickaxeBase;
 import gtPlusPlus.core.item.tool.staballoy.MultiSpadeBase;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.Material;
+import gtPlusPlus.core.recipe.common.CI;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.math.MathUtils;
 import gtPlusPlus.core.util.reflect.ReflectionUtils;
@@ -39,6 +42,7 @@ import gtPlusPlus.xmod.gregtech.loaders.RecipeGen_DustGeneration;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -100,6 +104,11 @@ public class ItemUtils {
 		return y;
 	}
 
+	public static ItemStack getWildcardStack(final ItemStack x) {
+		final ItemStack y = ItemUtils.simpleMetaStack(x, WILDCARD_VALUE, 1);
+		return y;
+	}
+	
 	public static ItemStack getIC2Cell(final String S) {
 		final ItemStack moreTemp = ItemUtils.getItemStackOfAmountFromOreDictNoBroken("cell" + S, 1);
 
@@ -154,12 +163,19 @@ public class ItemUtils {
 		}
 	}
 
-	public static void addItemToOreDictionary(final ItemStack stack, final String oreDictName) {
-		try {
-			GT_OreDictUnificator.registerOre(oreDictName, stack);
-		} catch (final NullPointerException e) {
-			Logger.ERROR(stack.getDisplayName() + " not registered. [NULL]");
+	public static void addItemToOreDictionary(ItemStack stack, final String oreDictName, boolean useWildcardMeta) {
+		if (useWildcardMeta) {
+			stack = ItemUtils.getWildcardStack(stack);
 		}
+		try {
+			OreDictionary.registerOre(oreDictName, stack);
+		} catch (final NullPointerException e) {
+			Logger.ERROR(ItemUtils.getItemName(stack) + " not registered. [NULL]");
+		}
+	}
+	
+	public static void addItemToOreDictionary(final ItemStack stack, final String oreDictName) {
+		addItemToOreDictionary(stack, oreDictName, false);
 	}
 
 	public static ItemStack getItemStackWithMeta(final boolean MOD, final String FQRN, final String itemName,
@@ -896,46 +912,10 @@ public class ItemUtils {
 		return CORE.burnables.add(new Pair<Integer, ItemStack>(burn, aBurnable));
 	}
 
-	/**
-	 * Quick Block Name Lookup that is friendly to servers and locale.
-	 */
-	private static volatile Map<String, String> mLocaleCache = new HashMap<String, String>();
-
 	public static String getLocalizedNameOfBlock(BlockPos pos) {
 		Block block = pos.world.getBlock(pos.xPos, pos.yPos, pos.zPos);
 		int metaData = pos.world.getBlockMetadata(pos.xPos, pos.yPos, pos.zPos);
-		return getLocalizedNameOfBlock(block, metaData);
-	}
-
-	public synchronized static String getLocalizedNameOfBlock(Block block, int meta) {
-		if (block == null || meta < 0) {
-			return "Bad Block";
-		}
-		String mCacheKey = block.getUnlocalizedName() + ":" + meta;
-		if (mLocaleCache.containsKey(mCacheKey)) {
-			// Recache the key if it's invalid.
-			if (mLocaleCache.get(mCacheKey).toLowerCase().contains(".name")) {
-				mLocaleCache.remove(mCacheKey);
-				String mNew = ItemUtils.simpleMetaStack(block, meta, 1).getDisplayName();
-				//Logger.INFO("Re-caching "+mNew+" into locale cache.");
-				mLocaleCache.put(mCacheKey, mNew);
-			}
-			//Logger.INFO("Returning Cached Value.");
-			return mLocaleCache.get(mCacheKey);
-		} else {
-			Item item = Item.getItemFromBlock(block);
-			if (item == null) {
-				return "Bad Item";
-			}
-			String unlocalizedName = item.getUnlocalizedName(new ItemStack(block, 1, meta));
-			String blockName = StatCollector.translateToLocal(unlocalizedName + ".name");
-			if (blockName.toLowerCase().contains(".name")) {
-				blockName = ItemUtils.simpleMetaStack(block, meta, 1).getDisplayName();
-			}
-			mLocaleCache.put(mCacheKey, blockName);
-			//Logger.INFO("Cached New Value.");
-			return blockName;
-		}
+		return LangUtils.getLocalizedNameOfBlock(block, metaData);
 	}
 
 	public static boolean checkForInvalidItems(ItemStack mInput) {
@@ -1254,6 +1234,84 @@ public class ItemUtils {
 			}
 		}
 		return getNullStack();
+	}
+	
+	public static ItemStack getItemListObject(String aObjectFromExperimentalName, String aReplacementName, int aAmount) {
+		ItemList aItemListObject = getItemListObject(aObjectFromExperimentalName, aReplacementName);
+		if (aItemListObject == ItemList.NULL || aItemListObject == null) {
+			return null;
+		}
+		else {
+			return aItemListObject.get(aAmount);
+		}
+	}
+	
+	public static ItemStack getItemListObject(ItemList aItemListObject, int aAmount) {
+		if (aItemListObject == ItemList.NULL || aItemListObject == null) {
+			return null;
+		}
+		else {
+			return aItemListObject.get(aAmount);
+		}
+	}
+
+	public static ItemList getItemListObject(String aObjectFromExperimentalName, String aReplacementName) {
+		ItemList aVal = ItemList.valueOf(aObjectFromExperimentalName);
+		if (aVal != null) {
+			return aVal;
+		}
+		else {
+			aVal = ItemList.valueOf(aReplacementName);
+			if (aVal != null) {
+				return aVal;
+			}
+			else {
+				return ItemList.NULL;
+			}
+		}		
+	}
+
+	public static boolean isControlCircuit(ItemStack aStack) {
+		if (aStack != null) {
+			Item aItem = aStack.getItem();
+			if (aItem == CI.getNumberedBioCircuit(0).getItem() || aItem == CI.getNumberedCircuit(0).getItem()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCatalyst(ItemStack aStack) {
+
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mBlueCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mBrownCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mOrangeCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mPurpleCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mRedCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mYellowCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, GenericChem.mPinkCatalyst, true)) {
+			return true;
+		}
+		if (GT_Utility.areStacksEqual(aStack, AgriculturalChem.mGreenCatalyst, true)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static String getLocalizedNameOfBlock(Block aBlock, int aMeta) {
+		return LangUtils.getLocalizedNameOfBlock(aBlock, aMeta);
 	}
 
 }
